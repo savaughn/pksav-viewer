@@ -1,7 +1,25 @@
 import React from 'react';
 import { loadFile } from '../helpers';
+import { usePksavWasm } from '../hooks';
 
-const FileSelectScreen = ({ Module, load_save_file, setPkmnSave, setGameData, get_trainer_name }) => {
+const FileSelectScreen = ({ cb: loadedCallback }) => {
+    const {
+        Module,
+        loading,
+        error,
+        load_save_file,
+        get_trainer_name,
+        get_trainer_id
+    } = usePksavWasm();
+
+    if (loading) {
+        return <div>Loading Wasm...</div>;
+    }
+
+    if (error) {
+        return <div>Wasm Loading Error: {error.message}</div>;
+    }
+
     const onChange = async (event) => {
         try {
             const filename = await loadFile(event.target, Module);
@@ -11,13 +29,12 @@ const FileSelectScreen = ({ Module, load_save_file, setPkmnSave, setGameData, ge
                 console.error("Error loading save file:", error);
                 return;
             }
-            setPkmnSave(_pkmnSave);
-            setGameData({
+            loadedCallback(_pkmnSave, {
                 trainerName: Module.UTF8ToString(get_trainer_name(_pkmnSave), 8),
-                trainerId: 0,
+                trainerId: get_trainer_id(_pkmnSave),
                 party: []
-              });
-            
+            });
+
         } catch (error) {
             console.error("Error loading file:", error);
             return;
@@ -25,7 +42,7 @@ const FileSelectScreen = ({ Module, load_save_file, setPkmnSave, setGameData, ge
     };
 
     return (
-        <main style={{ padding: 20}}>
+        <main style={{ padding: 20 }}>
             <p>
                 <label htmlFor="file">Select a Pokemon Gameboy Savefile:</label>
             </p>

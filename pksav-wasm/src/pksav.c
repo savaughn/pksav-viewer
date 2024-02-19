@@ -35,3 +35,12 @@ char* get_trainer_name(struct pksav_gen1_save *pkmn_save)
     }
     return trainer_name;
 }
+
+EMSCRIPTEN_KEEPALIVE
+char* get_trainer_id(struct pksav_gen1_save *pkmn_save)
+{
+    uint16_t trainer_id = pksav_bigendian16(*pkmn_save->trainer_info.p_id);
+    static char trainer_id_str[6] = {"\0"};
+    sprintf(trainer_id_str, "%05d", trainer_id);
+    return trainer_id_str;
+}

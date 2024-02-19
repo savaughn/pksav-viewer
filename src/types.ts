@@ -13,7 +13,7 @@ export type PartyMember = {
   
   export interface GameData {
     trainerName: string;
-    trainerId: number;
+    trainerId: string;
     party: PartyMember[];
   }
 
@@ -30,4 +30,5 @@ export type PartyMember = {
     error: string | null;
     load_save_file: (_data: number, _filename: string) => number | null;
     get_trainer_name: (_data: number) => number | null;
+    get_trainer_id: (_data: number) => number | null;
   };

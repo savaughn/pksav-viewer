@@ -1,31 +1,26 @@
-import React, { useState } from 'react';
-import { usePksavWasm } from './hooks';
+import React, { useCallback, useState } from 'react';
 import { FileSelectScreen } from './screens';
 import { GameData } from './types';
 
-const App = () => {
-  const [ pkmnSave, setPkmnSave ] = useState();
-  const [ gameData, setGameData ] = useState({} as GameData);
-  const { Module, loading, error, load_save_file, get_trainer_name } = usePksavWasm();
+const App = () : JSX.Element => {
+  const [ pkmnSave, setPkmnSave ] = useState(null as number | null);
+  const [ trainerInfo, setTrainerInfo ] = useState({} as GameData);
 
-  if (loading) {
-    return <div>Loading Wasm...</div>;
-  }
-
-  if (error) {
-    return <div>Wasm Loading Error: {error.message}</div>;
-  }
-
-  // TODO: Wrap with useWasm provider instead
+  const loadedCallback = useCallback((save: number, data: GameData) => {
+    setPkmnSave(save);
+    setTrainerInfo(data);
+  }, []);
+  
   if (!pkmnSave) {
     return (
-      <FileSelectScreen Module={Module} load_save_file={load_save_file} setPkmnSave={setPkmnSave} setGameData={ setGameData} get_trainer_name={get_trainer_name} />
+      <FileSelectScreen cb={ loadedCallback } />
     );
   }
 
   return (
     <main style={{ padding: 50 }}>
-      <p>{`NAME/${gameData.trainerName}`}</p>
+      <p>{`NAME/${trainerInfo?.trainerName || 'Missing Name'}`}</p>
+      <p>{`ID No ${trainerInfo?.trainerId || 'Missing id'}`}</p>
     </main>
   );
 };
