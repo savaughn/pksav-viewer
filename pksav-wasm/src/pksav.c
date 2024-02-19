@@ -28,6 +28,10 @@ char* get_trainer_name(struct pksav_gen1_save *pkmn_save)
 {
     static char trainer_name[8] = {"\0"};
     enum pksav_error error = pksav_gen1_import_text(pkmn_save->trainer_info.p_name, trainer_name, 7);
-    printf("Trainer name from C: %s\n", trainer_name);
+    if (error != PKSAV_ERROR_NONE)
+    {
+        printf("Error getting trainer name: %d\n", error);
+        return NULL;
+    }
     return trainer_name;
 }
