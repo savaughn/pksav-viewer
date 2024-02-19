@@ -1,7 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
+import createModule from './pksav/pksav.mjs';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+    createModule()
+      .then((module) => {
+        console.log(module);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
