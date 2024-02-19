@@ -2,7 +2,7 @@
 src/pksav.mjs: src/pksav.c
 	emcc --no-entry src/pksav.c -o src/pksav.mjs  \
 	  --pre-js src/locateFile.js  \
-	  -Iinclude -L../../pksav/build-wasm/lib -lpksav  \
+	  -Iinclude -Llib -lpksav  \
 	  -s ENVIRONMENT='web'  \
 	  -s EXPORT_NAME='createModule'  \
 	  -s USE_ES6_IMPORT_META=0  \
