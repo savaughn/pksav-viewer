@@ -10,6 +10,7 @@ const usePksavWasm = () : PksavWasm => {
   const [load_save_file, set_load_save_file] = useState(null);
   const [get_trainer_name, set_get_trainer_name] = useState(null);
   const [get_trainer_id, set_get_trainer_id] = useState(null);
+  const [get_party_count, set_get_party_count] = useState(0);
 
   useEffect(() => {
     createmodule().then((module: Module) => {
@@ -17,6 +18,7 @@ const usePksavWasm = () : PksavWasm => {
       set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string"]));
       set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number"]));
       set_get_trainer_id(() => module.cwrap("get_trainer_id", "string", ["number"]));
+      set_get_party_count(() => module.cwrap("get_party_count", "number", ["number"]));
     })
       .then(() => setLoading(false))
       .catch((error: string) => {
@@ -25,7 +27,7 @@ const usePksavWasm = () : PksavWasm => {
       });
   }, []);
 
-  return { Module, loading, error, load_save_file, get_trainer_name, get_trainer_id };
+  return { Module, loading, error, load_save_file, get_trainer_name, get_trainer_id, get_party_count };
 };
 
 export default usePksavWasm;

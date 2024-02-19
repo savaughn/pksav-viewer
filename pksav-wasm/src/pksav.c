@@ -44,3 +44,11 @@ char* get_trainer_id(struct pksav_gen1_save *pkmn_save)
     sprintf(trainer_id_str, "%05d", trainer_id);
     return trainer_id_str;
 }
+
+EMSCRIPTEN_KEEPALIVE
+int get_party_count(struct pksav_gen1_save *pkmn_save)
+{
+    return pkmn_save->pokemon_storage.p_party->count;
+}
+
+// EMSCRIPTEN_KEEPALIVE

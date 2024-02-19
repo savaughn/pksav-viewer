@@ -14,6 +14,7 @@ export type PartyMember = {
   export interface GameData {
     trainerName: string;
     trainerId: string;
+    partyCount: number;
     party: PartyMember[];
     loaded: boolean;
   }
