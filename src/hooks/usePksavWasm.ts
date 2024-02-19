@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import createmodule from '../pksav/pksav.mjs';
 import { Module, PksavWasm } from '../types';
 
-
-
 const usePksavWasm = () : PksavWasm => {
   const [Module, setModule] = useState({} as Module);
   const [loading, setLoading] = useState(true);

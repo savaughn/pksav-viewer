@@ -24,17 +24,18 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
     const onChange = async (event) => {
         try {
             const filename = await loadFile(event.target, Module);
-            const _pkmnSave = Module._malloc(0x8000);
-            let error = load_save_file(_pkmnSave, filename);
+            const pkmnSave = Module._malloc(0x8000);
+            let error = load_save_file(pkmnSave, filename);
             if (error) {
                 console.error("Error loading save file:", error);
                 setLoadFileError(error);
                 return;
             }
-            loadedCallback(_pkmnSave, {
-                trainerName: Module.UTF8ToString(get_trainer_name(_pkmnSave), 8),
-                trainerId: get_trainer_id(_pkmnSave),
-                party: []
+            loadedCallback({
+                trainerName: Module.UTF8ToString(get_trainer_name(pkmnSave), 8),
+                trainerId: get_trainer_id(pkmnSave),
+                party: [],
+                loaded: true
             });
 
         } catch (error) {

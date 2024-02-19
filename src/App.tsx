@@ -1,17 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { FileSelectScreen } from './screens';
-import { GameData } from './types';
+import { useTrainerInfo } from './hooks';
 
 const App = () : JSX.Element => {
-  const [ pkmnSave, setPkmnSave ] = useState(null as number | null);
-  const [ trainerInfo, setTrainerInfo ] = useState({} as GameData);
-
-  const loadedCallback = useCallback((save: number, data: GameData) => {
-    setPkmnSave(save);
-    setTrainerInfo(data);
-  }, []);
+  const { trainerInfo, loadedCallback } = useTrainerInfo();
   
-  if (!pkmnSave) {
+  if (!trainerInfo.loaded) {
     return (
       <FileSelectScreen cb={ loadedCallback } />
     );

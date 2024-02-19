@@ -15,6 +15,7 @@ export type PartyMember = {
     trainerName: string;
     trainerId: string;
     party: PartyMember[];
+    loaded: boolean;
   }
 
   export type Module = {
