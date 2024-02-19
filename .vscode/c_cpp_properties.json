@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/pksav-wasm/**",
+                "${workspaceFolder}/pksav-wasm/include/**",
+                "/Users/spencer/Projects/emsdk/upstream/**",
+                "${workspaceFolder}/pksav-wasm/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerPath": "/Users/spencer/Projects/emsdk/upstream/emscripten/emcc"
+        }
+    ],
+    "version": 4
+}
