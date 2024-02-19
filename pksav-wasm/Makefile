@@ -7,8 +7,8 @@ src/pksav.mjs: src/pksav.c
 	  -s EXPORT_NAME='createModule'  \
 	  -s USE_ES6_IMPORT_META=0  \
 	  -s FORCE_FILESYSTEM=1  \
-	  -s EXPORTED_FUNCTIONS='["_malloc", "_free", "_strcat", "_printf"]'  \
-	  -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'  \
+	  -s EXPORTED_FUNCTIONS='["_malloc", "_free"]'  \
+	  -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap", "UTF8ToString"]'  \
 	  -O3
 	mv src/pksav.mjs ../src/pksav/pksav.mjs
 	mv src/pksav.wasm ../public/pksav.wasm
