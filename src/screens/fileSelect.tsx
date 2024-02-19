@@ -11,6 +11,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
         get_trainer_name,
         get_trainer_id
     } = usePksavWasm();
+    const [loadFileError, setLoadFileError] = React.useState(null as string | null);
 
     if (loading) {
         return <div>Loading Wasm...</div>;
@@ -27,6 +28,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
             let error = load_save_file(_pkmnSave, filename);
             if (error) {
                 console.error("Error loading save file:", error);
+                setLoadFileError(error);
                 return;
             }
             loadedCallback(_pkmnSave, {
@@ -40,6 +42,10 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
             return;
         }
     };
+
+    if (loadFileError) {
+        return <div>Error loading file: {loadFileError}</div>;
+    }
 
     return (
         <main style={{ padding: 20 }}>

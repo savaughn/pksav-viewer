@@ -16,7 +16,7 @@ const usePksavWasm = () : PksavWasm => {
   useEffect(() => {
     createmodule().then((module: Module) => {
       setModule(module);
-      set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string"]) || null);
+      set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string"]));
       set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number"]));
       set_get_trainer_id(() => module.cwrap("get_trainer_id", "string", ["number"]));
     })
