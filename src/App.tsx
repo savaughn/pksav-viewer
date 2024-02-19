@@ -3,11 +3,11 @@ import { FileSelectScreen } from './screens';
 import { useTrainerInfo } from './hooks';
 
 const App = () : JSX.Element => {
-  const { trainerInfo, loadedCallback } = useTrainerInfo();
+  const { trainerInfo, onFileLoaded } = useTrainerInfo();
   
   if (!trainerInfo.loaded) {
     return (
-      <FileSelectScreen cb={ loadedCallback } />
+      <FileSelectScreen cb={ onFileLoaded } />
     );
   }
 

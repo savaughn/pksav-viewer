@@ -8,7 +8,7 @@ const useTrainerInfo = () => {
         setTrainerInfo(data);
     }, []);
 
-    return { trainerInfo, loadedCallback };
+    return { trainerInfo, onFileLoaded: loadedCallback };
 };
 
 export default useTrainerInfo;
