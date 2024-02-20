@@ -51,4 +51,22 @@ int get_party_count(struct pksav_gen1_save *pkmn_save)
     return pkmn_save->pokemon_storage.p_party->count;
 }
 
-// EMSCRIPTEN_KEEPALIVE
+
+EMSCRIPTEN_KEEPALIVE
+int get_party_party_index(struct pksav_gen1_save *pkmn_save, uint8_t index, struct pksav_gen1_pokemon_party_data *pkmn_party)
+{
+    uint8_t party_count = pkmn_save->pokemon_storage.p_party->count;
+    if (index >= party_count)
+    {
+        printf("Index out of range\n");
+        return 1;
+    }
+    pkmn_party->level = pkmn_save->pokemon_storage.p_party->party[index].party_data.level;
+    pkmn_party->atk = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.atk);
+    pkmn_party->def = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.def);
+    pkmn_party->spd = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.spd);
+    pkmn_party->spcl = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.spcl);
+    pkmn_party->max_hp = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.max_hp);
+
+    return 0;
+}
