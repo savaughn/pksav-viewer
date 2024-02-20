@@ -13,7 +13,7 @@ export interface PkmnPcData {
   evDef: number;      // 0x15
   evSpd: number;      // 0x17
   evSpcl: number;     // 0x19
-  ivData: number;     // 0x1B
+  ivData: number[];     // 0x1B
   movePp: number[];   // 0x1D
 };  // 0x21
 
@@ -27,7 +27,8 @@ export interface PkmnPartyData {
 }  // 0xB
 
 export type PkmnStats = {
-  pc_data?: PkmnPcData;
+  nickname: string;
+  pc_data: PkmnPcData;
   party_data: PkmnPartyData;
 };
 
@@ -58,4 +59,6 @@ export type PksavWasm = {
   get_trainer_id: (_data: number) => number | null;
   get_party_count: (_data: number) => number;
   get_party_data: (_data: number, _partyIndex: number, _partyStruct: number) => number | null;
+  get_pkmn_dvs: (_data: number, _partyIndex: number, _dvDataStruct: number) => number | null;
+  get_pkmn_nickname: (_data: number, _partyIndex: number) => number | null;
 };

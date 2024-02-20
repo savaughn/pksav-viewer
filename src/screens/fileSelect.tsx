@@ -11,7 +11,9 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
         get_trainer_name,
         get_trainer_id,
         get_party_count,
-        get_party_data
+        get_party_data,
+        get_pkmn_dvs,
+        get_pkmn_nickname
     } = usePksavWasm();
     const [loadFileError, setLoadFileError] = useState(null as number | null);
 
@@ -37,7 +39,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
                 return;
             }
 
-            const { partyCount, pkmnPartyData } = getPartyData(Module, get_party_count, get_party_data, pkmnSaveStruct);
+            const { partyCount, pkmnPartyData } = getPartyData(Module, get_party_count, get_party_data, pkmnSaveStruct, get_pkmn_dvs, get_pkmn_nickname);
 
             // Populate trainer info
             loadedCallback({

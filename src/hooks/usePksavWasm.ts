@@ -11,6 +11,8 @@ const usePksavWasm = (): PksavWasm => {
   const [get_trainer_id, set_get_trainer_id] = useState(null);
   const [get_party_count, set_get_party_count] = useState(0);
   const [get_party_data, set_get_party_data] = useState(null);
+  const [get_pkmn_dvs, set_get_pkmn_dvs] = useState(null);
+  const [get_pkmn_nickname, set_get_pkmn_nickname] = useState(null);
 
   useEffect(() => {
     createmodule().then((module: Module) => {
@@ -19,7 +21,9 @@ const usePksavWasm = (): PksavWasm => {
       set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number"]));
       set_get_trainer_id(() => module.cwrap("get_trainer_id", "string", ["number"]));
       set_get_party_count(() => module.cwrap("get_party_count", "number", ["number"]));
-      set_get_party_data(() => module.cwrap("get_party_party_index", "number", ["number", "number", "number"]));
+      set_get_party_data(() => module.cwrap("get_party_data_at_index", "number", ["number", "number", "number"]));
+      set_get_pkmn_dvs(() => module.cwrap("get_pkmn_dvs", "number", ["number", "number", "number"]));
+      set_get_pkmn_nickname(() => module.cwrap("get_pkmn_nickname", "number", ["number", "number"]));
     })
       .then(() => setLoading(false))
       .catch((error: Error) => {
@@ -36,7 +40,9 @@ const usePksavWasm = (): PksavWasm => {
     get_trainer_name, 
     get_trainer_id, 
     get_party_count, 
-    get_party_data
+    get_party_data,
+    get_pkmn_dvs,
+    get_pkmn_nickname
   };
 };
 
