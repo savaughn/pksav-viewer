@@ -51,6 +51,17 @@ int get_party_count(struct pksav_gen1_save *pkmn_save)
     return pkmn_save->pokemon_storage.p_party->count;
 }
 
+EMSCRIPTEN_KEEPALIVE
+void get_party_pc_index(struct pksav_gen1_save *pkmn_save, uint8_t index)
+{
+    uint8_t party_count = pkmn_save->pokemon_storage.p_party->count;
+    if (index >= party_count)
+    {
+        printf("Index out of range\n");
+        return;
+    }
+    struct pksav_gen1_pc_pokemon pkmn_pc = pkmn_save->pokemon_storage.p_party->party[index].pc_data;
+}
 
 EMSCRIPTEN_KEEPALIVE
 int get_party_party_index(struct pksav_gen1_save *pkmn_save, uint8_t index, struct pksav_gen1_pokemon_party_data *pkmn_party)
