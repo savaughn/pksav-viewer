@@ -2,7 +2,6 @@
   "name": "pksav-viewer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://savaughn.github.io/pksav-viewer",
   "dependencies": {
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "13.4.0",
@@ -13,12 +12,14 @@
     "web-vitals": "2.1.4"
   },
   "scripts": {
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d build && npm run homepage:delete",
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build": "npm run wasm && react-scripts build",
+    "build": "npm run homepage:set && npm run wasm && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "wasm": "cd pksav-wasm && make -B && cd .."
+    "wasm": "cd pksav-wasm && make -B && cd ..",
+    "homepage:set": "npm pkg set \"homepage\"=\"https://savaughn.github.io/pksav-viewer\"",
+    "homepage:delete": "npm pkg delete \"homepage\""
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +43,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^6.1.1"
+    "gh-pages": "6.1.1"
   }
 }
