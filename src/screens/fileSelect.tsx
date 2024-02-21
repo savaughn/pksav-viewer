@@ -13,7 +13,8 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
         get_party_count,
         get_party_data,
         get_pkmn_dvs,
-        get_pkmn_nickname
+        get_pkmn_nickname,
+        get_pkdex_entry
     } = usePksavWasm();
     const [loadFileError, setLoadFileError] = useState(null as number | null);
 
@@ -39,7 +40,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
                 return;
             }
 
-            const { partyCount, pkmnPartyData } = getPartyData(Module, get_party_count, get_party_data, pkmnSaveStruct, get_pkmn_dvs, get_pkmn_nickname);
+            const { partyCount, pkmnPartyData } = getPartyData(Module, get_party_count, get_party_data, pkmnSaveStruct, get_pkmn_dvs, get_pkmn_nickname, get_pkdex_entry);
 
             // Populate trainer info
             loadedCallback({
@@ -61,15 +62,62 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
         return <div>Error loading file: {loadFileError}</div>;
     }
 
+    const palette = {
+        background: '#5db9ff',
+        primary: '#fbd743',
+        secondary: '#ff1f1f',
+        text: '#363b81',
+    };
+
     return (
-        <main style={{ padding: 20 }}>
-            <p>
-                <label htmlFor="file">Select a Pokemon Gameboy Savefile:</label>
-            </p>
-            <p>
-                <input type="file" id="file" name="file" onChange={onChange} />
-            </p>
-        </main>
+        <div>
+            <style>
+                {`
+                    body, html {
+                        margin: 0;
+                        padding: 0;
+                        height: 100%;
+                        background-color: ${palette.background};
+                        color: ${palette.text};
+                    }
+                    
+                    main {
+                        padding: 20px;
+                        text-align: center;
+                    }
+                    
+                    h1 {
+                        font-size: 2em;
+                        color: ${palette.text};
+                    }
+                    
+                    img {
+                        margin-bottom: 10px;
+                    }
+                    
+                    input {
+                        padding: 10px;
+                        border-radius: 5px;
+                        border: 2px solid ${palette.secondary};
+                        width: 200px;
+                    }
+                `}
+            </style>
+
+            <main>
+                <div style={{ marginBottom: 20, }}>
+                    <h1>Pksav Viewer</h1>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pokémon Image" />
+                    <input type="file" id="file" name="file" onChange={onChange} />
+                    <p style={{ fontSize: '1.2em' }}>
+                    Proof of Concept: This application is in the early stages of development and serves as a proof of concept.
+                    It currently supports only Generation 1 Pokemon games with a .sav format.
+                </p>
+                </div>                
+            </main>
+        </div>
     );
 };
 

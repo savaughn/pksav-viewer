@@ -2,6 +2,7 @@
 #include "pksav.h"
 #include <stdio.h>
 #include <string.h>
+#include "pkmnstats.h"
 
 int load_save_file(struct pksav_gen1_save *pkmn_save, const char file_path[100]);
 char* get_trainer_name(struct pksav_gen1_save *pkmn_save);
@@ -129,4 +130,10 @@ char *get_pkmn_nickname(struct pksav_gen1_save *pkmn_save, uint8_t index)
         return "MissingNo.";
     }
     return pkmn_nickname;
+}
+
+EMSCRIPTEN_KEEPALIVE
+int get_pkdex_entry(struct pksav_gen1_save *pkmn_save, uint8_t index)
+{
+    return species_gen1_to_gen2[pkmn_save->pokemon_storage.p_party->party[index].pc_data.species];
 }

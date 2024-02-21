@@ -28,6 +28,7 @@ export interface PkmnPartyData {
 
 export type PkmnStats = {
   nickname: string;
+  dexId: number;
   pc_data: PkmnPcData;
   party_data: PkmnPartyData;
 };

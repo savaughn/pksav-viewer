@@ -13,6 +13,7 @@ const usePksavWasm = (): PksavWasm => {
   const [get_party_data, set_get_party_data] = useState(null);
   const [get_pkmn_dvs, set_get_pkmn_dvs] = useState(null);
   const [get_pkmn_nickname, set_get_pkmn_nickname] = useState(null);
+  const [get_pkdex_entry, set_get_pkdex_entry] = useState(null);
 
   useEffect(() => {
     createmodule().then((module: Module) => {
@@ -24,6 +25,7 @@ const usePksavWasm = (): PksavWasm => {
       set_get_party_data(() => module.cwrap("get_party_data_at_index", "number", ["number", "number", "number"]));
       set_get_pkmn_dvs(() => module.cwrap("get_pkmn_dvs", "number", ["number", "number", "number"]));
       set_get_pkmn_nickname(() => module.cwrap("get_pkmn_nickname", "number", ["number", "number"]));
+      set_get_pkdex_entry(() => module.cwrap("get_pkdex_entry", "number", ["number", "number"]));
     })
       .then(() => setLoading(false))
       .catch((error: Error) => {
@@ -42,7 +44,8 @@ const usePksavWasm = (): PksavWasm => {
     get_party_count, 
     get_party_data,
     get_pkmn_dvs,
-    get_pkmn_nickname
+    get_pkmn_nickname,
+    get_pkdex_entry
   };
 };
 

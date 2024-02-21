@@ -44,7 +44,7 @@ const loadSaveFile = (Module, load_save_file, setLoadFileError, filename: string
     return pkmnSaveStruct;
 };
 
-const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: number, get_pkmn_dvs, get_pkmn_nickname) => {
+const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: number, get_pkmn_dvs, get_pkmn_nickname, get_pkdex_entry) => {
     const partyCount = get_party_count(pkmnSaveStruct);
     const pkmnPartyData: PkmnStats[] = [];
 
@@ -57,6 +57,7 @@ const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: n
 
         const stats: PkmnStats = {
             nickname: Module.UTF8ToString(get_pkmn_nickname(pkmnSaveStruct, i) || 0, 11),
+            dexId: get_pkdex_entry(pkmnSaveStruct, i),
             pc_data: {
                 species: Module.HEAPU8[partyStruct],
                 currentHp: Module.HEAPU8[partyStruct + PartyPCDataOffsets.CURRENT_HP],

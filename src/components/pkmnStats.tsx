@@ -4,11 +4,13 @@ const styles = {
     container: {
         display: 'flex',
         flex: 1,
-        width: '200px',
         margin: 10,
         border: '1px solid black',
         flexDirection: 'column',
-        borderRadius: 9
+        borderRadius: 9,
+        maxWidth: '300px',
+        minWidth: '200px',
+        justifyContent: 'center',
     },
     header: {
         display: 'flex',
@@ -18,11 +20,16 @@ const styles = {
     statsHeaderColumn: {
         display: 'flex',
         flexDirection: 'column',
-        paddingTop: '3.75rem'
     },
     statsData: {
         display: 'flex',
         flexDirection: 'column',
+    },
+    sprite: {
+        width: '80px',
+        height: '80px',
+        alignSelf: 'center',
+        marginBottom: '10px',
     }
 };
 
@@ -35,9 +42,15 @@ const Header = ({ nickname, level }) => {
     );
 }
 
-const StatsHeader = () => {
+const StatsHeader = ({ dexId }) => {
     return (
         <div style={styles.statsHeaderColumn}>
+            <img 
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dexId}.png`}
+                alt="Pokémon Image"
+                height={50}
+                width={50}
+            />
             <p>Max Hp:</p>
             <p>Attack:</p>
             <p>Defense:</p>
@@ -60,7 +73,7 @@ const StatsData = ({ maxHp, atk, def, spd, spcl }) => {
     );
 }
 
-const DVData = ({ivData: [atk, def, spd, spcl, hp]}) => {
+const DVData = ({ ivData: [atk, def, spd, spcl, hp] }) => {
     return (
         <div style={styles.statsData}>
             <h3>DV</h3>
@@ -78,7 +91,7 @@ const PkmnStats = ({ pkmn }) => {
         <div style={styles.container}>
             <Header nickname={pkmn.nickname} level={pkmn.party_data.level} />
             <div style={styles.header}>
-                <StatsHeader />
+                <StatsHeader dexId={pkmn.dexId} />
                 <StatsData {...pkmn.party_data} />
                 <DVData ivData={pkmn.pc_data.ivData} />
             </div>
