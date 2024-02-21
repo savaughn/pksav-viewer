@@ -106,7 +106,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
 
             <main>
                 <div style={{ marginBottom: 20, }}>
-                    <h1>Pksav Viewer</h1>
+                    <img src="https://fontmeme.com/permalink/240221/97daa6a56c5cd67de3b9acf415dea3db.png" />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" alt="Pokémon Image" />

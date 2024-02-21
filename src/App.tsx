@@ -4,11 +4,6 @@ import { useTrainerInfo } from './hooks';
 import { TrainerInfo, PkmnStats } from './components';
 
 const styles = {
-    mainContainer: {
-        padding: '100px',
-        backgroundColor: '#5db9ff',
-        color: '#363b81',
-    },
     partyContainer: {
         display: 'flex',
         backgroundColor: 'lightblue',
@@ -53,6 +48,10 @@ const App = (): JSX.Element => {
                         color: #363b81;
                     }
 
+                    p {
+                        color: #363b81;
+                    }
+
                     img {
                         margin-bottom: 10px;
                     }
@@ -66,13 +65,14 @@ const App = (): JSX.Element => {
                 `}
             </style>
 
-            <main style={styles.mainContainer}>
+            <main>
                 <TrainerInfo trainerInfo={trainerInfo} />
                 <div style={styles.partyContainer}>
                     {trainerInfo?.party.map((pkmn, i) => (
                         <PkmnStats key={i} pkmn={pkmn} />
                     ))}
                 </div>
+                <button style={{ marginTop: 20, height: 50, border: '1px solid black', borderRadius: 9, backgroundColor: 'lightblue' }} onClick={() => window.location.reload()}><p>{"< restart"}</p></button>
             </main>
         </div>
     );
