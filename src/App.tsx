@@ -17,6 +17,7 @@ const styles = {
         border: '1px solid black',
         marginTop: '20px',
         justifyContent: 'center',
+        minWidth: '220px',
     }
 };
 

@@ -11,7 +11,8 @@ const styles = {
         marginBottom: 10,
         paddingLeft: 10,
         backgroundColor: 'lightblue',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        minWidth: '220px',
     }
 };
 
