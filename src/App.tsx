@@ -3,6 +3,16 @@ import { FileSelectScreen } from './screens';
 import { useTrainerInfo } from './hooks';
 import { TrainerInfo, PkmnStats } from './components';
 
+const styles = {
+  partyContainer: { 
+    display: 'flex',
+    backgroundColor: 'lightblue', 
+    flexWrap: 'wrap', 
+    borderRadius: 9,
+    border: '1px solid black', 
+  }
+};
+
 const App = (): JSX.Element => {
   const { trainerInfo, loading, onFileLoaded } = useTrainerInfo();
 
@@ -13,9 +23,9 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <main style={{ padding: 50 }}>
+    <main style={{ padding: '100px' }}>
       <TrainerInfo trainerInfo={trainerInfo} />
-      <div style={{ flexDirection: 'column', backgroundColor: 'lightblue' }}>
+      <div style={styles.partyContainer}>
         {trainerInfo?.party.map((pkmn, i) => (
           <PkmnStats key={i} pkmn={pkmn} />
         ))}
