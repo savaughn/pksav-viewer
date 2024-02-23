@@ -7,6 +7,7 @@ const usePksavWasm = (): PksavWasm => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null as string | null);
   const [load_save_file, set_load_save_file] = useState(null);
+  const [get_save_generation, set_get_save_generation] = useState(null);
   const [get_trainer_name, set_get_trainer_name] = useState(null);
   const [get_trainer_id, set_get_trainer_id] = useState(null);
   const [get_party_count, set_get_party_count] = useState(0);
@@ -18,10 +19,11 @@ const usePksavWasm = (): PksavWasm => {
   useEffect(() => {
     createmodule().then((module: Module) => {
       setModule(module);
-      set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string"]));
+      set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string", "number"]));
       set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number"]));
+      set_get_save_generation(() => module.cwrap("detect_savefile_generation", "number", ["string", "number"]));
       set_get_trainer_id(() => module.cwrap("get_trainer_id", "string", ["number"]));
-      set_get_party_count(() => module.cwrap("get_party_count", "number", ["number"]));
+      set_get_party_count(() => module.cwrap("get_party_count", "number", ["number", "number"]));
       set_get_party_data(() => module.cwrap("get_party_data_at_index", "number", ["number", "number", "number"]));
       set_get_pkmn_dvs(() => module.cwrap("get_pkmn_dvs", "number", ["number", "number", "number"]));
       set_get_pkmn_nickname(() => module.cwrap("get_pkmn_nickname", "number", ["number", "number"]));
@@ -38,7 +40,8 @@ const usePksavWasm = (): PksavWasm => {
     Module,
     loading,
     error, 
-    load_save_file, 
+    load_save_file,
+    get_save_generation,
     get_trainer_name, 
     get_trainer_id, 
     get_party_count, 

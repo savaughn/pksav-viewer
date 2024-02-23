@@ -56,10 +56,12 @@ export type PksavWasm = {
   loading: boolean;
   error: string | null;
   load_save_file: (_data: number, _filename: string) => number | null;
+  get_save_generation: (_data: number) => number | null;
   get_trainer_name: (_data: number) => number | null;
   get_trainer_id: (_data: number) => number | null;
   get_party_count: (_data: number) => number;
   get_party_data: (_data: number, _partyIndex: number, _partyStruct: number) => number | null;
   get_pkmn_dvs: (_data: number, _partyIndex: number, _dvDataStruct: number) => number | null;
   get_pkmn_nickname: (_data: number, _partyIndex: number) => number | null;
+  get_pkdex_entry: (_data: number, _partyIndex: number) => number | null;
 };

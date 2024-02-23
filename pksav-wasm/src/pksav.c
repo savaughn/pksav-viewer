@@ -4,28 +4,55 @@
 #include <string.h>
 #include "pkmnstats.h"
 
-int load_save_file(struct pksav_gen1_save *pkmn_save, const char file_path[100]);
-char* get_trainer_name(struct pksav_gen1_save *pkmn_save);
+typedef enum
+{
+    SAVE_GENERATION_NONE,
+    SAVE_GENERATION_1,
+    SAVE_GENERATION_2,
+    SAVE_GENERATION_3,
+    SAVE_GENERATION_CORRUPTED,
+} SaveGenerationType;
 
 EMSCRIPTEN_KEEPALIVE
-int load_save_file(struct pksav_gen1_save *pkmn_save, const char file_path[100])
+int load_save_file(void *pkmn_save, const char file_path[100], uint8_t generation)
 {
-    enum pksav_error error = PKSAV_ERROR_NONE;
-
-    error = pksav_gen1_load_save_from_file(file_path, pkmn_save);
-
-    if (error != PKSAV_ERROR_NONE)
+    switch (generation)
     {
-        printf("Error loading save file: %d\n", error);
+    case 1:
+    {
+        enum pksav_error error = PKSAV_ERROR_NONE;
+        error = pksav_gen1_load_save_from_file(file_path, (struct pksav_gen1_save *)pkmn_save);
+
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error loading save file: %d\n", error);
+            return error;
+        }
+        printf("Save file loaded successfully\n");
+
         return error;
     }
-    printf("Save file loaded successfully\n");
+    case 2:
+    {
+        enum pksav_error error = PKSAV_ERROR_NONE;
+        error = pksav_gen2_load_save_from_file(file_path, (struct pksav_gen2_save *)pkmn_save);
 
-    return error;
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error loading save file: %d\n", error);
+            return error;
+        }
+        printf("Save file loaded successfully\n");
+
+        return error;
+    }
+    default:
+        break;
+    }
 }
 
 EMSCRIPTEN_KEEPALIVE
-char* get_trainer_name(struct pksav_gen1_save *pkmn_save)
+char *get_trainer_name(struct pksav_gen1_save *pkmn_save)
 {
     static char trainer_name[8] = {"\0"};
     enum pksav_error error = pksav_gen1_import_text(pkmn_save->trainer_info.p_name, trainer_name, 7);
@@ -38,7 +65,7 @@ char* get_trainer_name(struct pksav_gen1_save *pkmn_save)
 }
 
 EMSCRIPTEN_KEEPALIVE
-char* get_trainer_id(struct pksav_gen1_save *pkmn_save)
+char *get_trainer_id(struct pksav_gen1_save *pkmn_save)
 {
     uint16_t trainer_id = pksav_bigendian16(*pkmn_save->trainer_info.p_id);
     static char trainer_id_str[6] = {"\0"};
@@ -47,9 +74,21 @@ char* get_trainer_id(struct pksav_gen1_save *pkmn_save)
 }
 
 EMSCRIPTEN_KEEPALIVE
-int get_party_count(struct pksav_gen1_save *pkmn_save)
+int get_party_count(void *pkmn_save, uint8_t generation)
 {
-    return pkmn_save->pokemon_storage.p_party->count;
+    switch (generation)
+    {
+    case 1:
+        puts("gen1");
+        return ((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->count;
+        break;
+    case 2:
+        puts("gen2");
+        return ((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->count;
+        break;
+    default:
+        break;
+    }
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -81,7 +120,7 @@ int get_party_data_at_index(struct pksav_gen1_save *pkmn_save, uint8_t index, st
     pkmn_party->pc_data.ev_spd = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_spd);
     pkmn_party->pc_data.ev_spcl = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_spcl);
 
-    //TODO: might need pp move masking
+    // TODO: might need pp move masking
     pkmn_party->pc_data.move_pps[0] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[0];
     pkmn_party->pc_data.move_pps[1] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[1];
     pkmn_party->pc_data.move_pps[2] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[2];
@@ -136,4 +175,52 @@ EMSCRIPTEN_KEEPALIVE
 int get_pkdex_entry(struct pksav_gen1_save *pkmn_save, uint8_t index)
 {
     return species_gen1_to_gen2[pkmn_save->pokemon_storage.p_party->party[index].pc_data.species];
+}
+
+EMSCRIPTEN_KEEPALIVE
+/**
+ * @brief detects the save file generation of a save file
+ * @param path the path to the save file
+ * @param save_generation_type a pointer to a SaveGenerationType to store the save generation type
+ * @return an enum pksav_error
+ */
+int detect_savefile_generation(char *path, uint8_t *save_generation_type)
+{
+    enum pksav_error err = PKSAV_ERROR_NONE;
+
+    enum pksav_gen1_save_type gen1_save_type = PKSAV_GEN1_SAVE_TYPE_NONE;
+    enum pksav_gen2_save_type gen2_save_type = PKSAV_GEN2_SAVE_TYPE_NONE;
+    enum pksav_gen3_save_type gen3_save_type = PKSAV_GEN3_SAVE_TYPE_NONE;
+
+    uint8_t error = pksav_gen1_get_file_save_type(path, &gen1_save_type);
+
+    if (error)
+    {
+        pksav_gen2_get_file_save_type(path, &gen2_save_type);
+        if (gen2_save_type == PKSAV_GEN2_SAVE_TYPE_NONE)
+        {
+            pksav_gen3_get_file_save_type(path, &gen3_save_type);
+            if (gen3_save_type == PKSAV_GEN3_SAVE_TYPE_NONE)
+            {
+                *save_generation_type = SAVE_GENERATION_CORRUPTED;
+                return 0;
+            }
+            else
+            {
+                // Not yet supported return corrupted
+                return 4;
+                // *save_generation_type = SAVE_GENERATION_3;
+            }
+        }
+        else
+        {
+            *save_generation_type = SAVE_GENERATION_2;
+        }
+    }
+    else
+    {
+        *save_generation_type = SAVE_GENERATION_1;
+    }
+
+    return err;
 }

@@ -33,19 +33,38 @@ const PartyPCDataOffsets = {
     MOVE_PP: 0x1D
 };
 
-const loadSaveFile = (Module, load_save_file, setLoadFileError, filename: string) => {
-    const pkmnSaveStruct = Module._malloc(0x8000) || 0;
-    let error = load_save_file(pkmnSaveStruct, filename);
+const saveGenerationType = [
+    'SAVE_GENERATION_NONE',
+    'SAVE_GENERATION_1',
+    'SAVE_GENERATION_2',
+    'SAVE_GENERATION_3',
+    'SAVE_GENERATION_NOT_SUPPORTED'
+];
+
+const loadSaveFile = (Module, load_save_file, setLoadFileError, filename: string, get_save_generation) => {
+
+    const save_file_generation = Module._malloc(0x1);
+    let error = get_save_generation(filename, save_file_generation);
+    if (error) {
+        console.error("Error getting save file generation:", saveGenerationType[error]);
+        setLoadFileError(saveGenerationType[error]);
+        return null;
+    }
+    const saveGeneration = Module.HEAPU8[save_file_generation];
+
+    // const pkmnSaveStruct = Module._malloc(0x84) || 0; //gen1
+    const pkmnSaveStruct = Module._malloc(0xB8) || 0; //gen2
+    error = load_save_file(pkmnSaveStruct, filename, saveGeneration);
     if (error) {
         console.error("Error loading save file:", error);
         setLoadFileError(error);
         return null;
     }
-    return pkmnSaveStruct;
+    return { pkmnSaveStruct, saveGeneration };
 };
 
-const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: number, get_pkmn_dvs, get_pkmn_nickname, get_pkdex_entry) => {
-    const partyCount = get_party_count(pkmnSaveStruct);
+const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: number, get_pkmn_dvs, get_pkmn_nickname, get_pkdex_entry, saveGeneration) => {
+    const partyCount = get_party_count(pkmnSaveStruct, saveGeneration);
     const pkmnPartyData: PkmnStats[] = [];
 
     for (let i = 0; i < partyCount; i++) {
@@ -113,4 +132,4 @@ const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: n
     return { partyCount, pkmnPartyData };
 };
 
-export { loadFile, loadSaveFile, getPartyData};
+export { loadFile, loadSaveFile, getPartyData };
