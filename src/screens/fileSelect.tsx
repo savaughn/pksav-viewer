@@ -120,7 +120,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
                     <input type="file" id="file" name="file" onChange={onChange} />
                     <p style={{ fontSize: '1.2em' }}>
                     Proof of Concept: This application is in the early stages of development and serves as a proof of concept.
-                    It currently supports only Generation 1 Pokemon games with a .sav format.
+                    It currently supports only Generation 1 and Generation 2 Pokemon games with a .sav format. Pokemon Crystal currently does not work.  ¯\_(ツ)_/¯
                 </p>
                 </div>                
             </main>
