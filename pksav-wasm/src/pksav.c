@@ -295,7 +295,7 @@ int detect_savefile_generation(char *path, uint8_t *save_generation_type)
             }
             else
             {
-                // Not yet supported return corrupted
+                // Not yet supported return unsupported
                 return 4;
                 // *save_generation_type = SAVE_GENERATION_3;
             }
