@@ -85,7 +85,7 @@ const StatsData = ({ maxHp, atk, def, spd, spcl = 0, spatk, spdef, showSplitSpcl
     );
 }
 
-const DVData = ({ ivData: [atk, def, spd, spcl, hp] }) => {
+const DVData = ({ ivData: [atk, def, spd, spcl, hp], showSplitSpcl }) => {
     return (
         <div style={styles.statsData}>
             <h3>DV</h3>
@@ -94,6 +94,9 @@ const DVData = ({ ivData: [atk, def, spd, spcl, hp] }) => {
             <p>{`${def}`}</p>
             <p>{`${spd}`}</p>
             <p>{`${spcl}`}</p>
+            {
+                showSplitSpcl && <p>{`${spcl}`}</p>
+            }
         </div>
     );
 }
@@ -106,7 +109,7 @@ const PkmnStats = ({ pkmn }) => {
             <div style={styles.header}>
                 <StatsHeader dexId={pkmn.dexId} showSplitSpcl={showSplitSpcl} />
                 <StatsData {...pkmn.party_data} showSplitSpcl={showSplitSpcl} />
-                <DVData ivData={pkmn.pc_data.ivData} />
+                <DVData ivData={pkmn.pc_data.ivData} showSplitSpcl={showSplitSpcl} />
             </div>
         </div>
     );
