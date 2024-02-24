@@ -79,7 +79,7 @@ const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: n
 
         switch (saveGeneration) {
             case 1: stats = {
-                nickname: Module.UTF8ToString(get_pkmn_nickname(pkmnSaveStruct, i) || 0, 11),
+                nickname: Module.UTF8ToString(get_pkmn_nickname(pkmnSaveStruct, i, saveGeneration) || 0, 11),
                 dexId: get_pkdex_entry(pkmnSaveStruct, i),
                 pc_data: {
                     species: Module.HEAPU8[partyStruct],
@@ -132,8 +132,7 @@ const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: n
             case 2:
                 {
                     stats = {
-                        // nickname: Module.UTF8ToString(get_pkmn_nickname(pkmnSaveStruct, i) || 0, 11),
-                        nickname: 'placeholder',
+                        nickname: Module.UTF8ToString(get_pkmn_nickname(pkmnSaveStruct, i, saveGeneration) || 0, 11),
                         dexId: Module.HEAPU8[partyStruct],
                         pc_data: {
                             ivData: [

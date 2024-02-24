@@ -26,7 +26,7 @@ const usePksavWasm = (): PksavWasm => {
       set_get_party_count(() => module.cwrap("get_party_count", "number", ["number", "number"]));
       set_get_party_data(() => module.cwrap("get_party_data_at_index", "number", ["number", "number", "number"]));
       set_get_pkmn_dvs(() => module.cwrap("get_pkmn_dvs", "number", ["number", "number", "number"]));
-      set_get_pkmn_nickname(() => module.cwrap("get_pkmn_nickname", "number", ["number", "number"]));
+      set_get_pkmn_nickname(() => module.cwrap("get_pkmn_nickname", "number", ["number", "number", "number"]));
       set_get_pkdex_entry(() => module.cwrap("get_pkdex_entry", "number", ["number", "number"]));
     })
       .then(() => setLoading(false))

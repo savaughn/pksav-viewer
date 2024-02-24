@@ -224,16 +224,35 @@ int get_pkmn_dvs(struct pksav_gen1_save *pkmn_save, uint8_t index, struct generi
 }
 
 EMSCRIPTEN_KEEPALIVE
-char *get_pkmn_nickname(struct pksav_gen1_save *pkmn_save, uint8_t index)
+char *get_pkmn_nickname(void *pkmn_save, uint8_t index, uint8_t generation)
 {
-    static char pkmn_nickname[11] = {"\0"};
-    enum pksav_error error = pksav_gen1_import_text(pkmn_save->pokemon_storage.p_party->nicknames[index], pkmn_nickname, 10);
-    if (error != PKSAV_ERROR_NONE)
+    switch (generation)
     {
-        printf("Error getting pokemon nickname: %d\n", error);
+    case SAVE_GENERATION_1:
+    {
+        static char pkmn_nickname[11] = {"\0"};
+        enum pksav_error error = pksav_gen1_import_text(((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->nicknames[index], pkmn_nickname, 10);
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error getting pokemon nickname: %d\n", error);
+            return "MissingNo.";
+        }
+        return pkmn_nickname;
+    }
+    case SAVE_GENERATION_2:
+    {
+        static char pkmn_nickname[11] = {"\0"};
+        enum pksav_error error = pksav_gen2_import_text(((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->nicknames[index], pkmn_nickname, 10);
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error getting pokemon nickname: %d\n", error);
+            return "MissingNo.";
+        }
+        return pkmn_nickname;
+    }
+    default:
         return "MissingNo.";
     }
-    return pkmn_nickname;
 }
 
 EMSCRIPTEN_KEEPALIVE
