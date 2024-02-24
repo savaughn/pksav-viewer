@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/pksav-viewer/static/css/main.e6c13ad2.css",
-    "main.js": "/pksav-viewer/static/js/main.82d96cba.js",
+    "main.js": "/pksav-viewer/static/js/main.2452ee81.js",
     "static/js/453.655008a2.chunk.js": "/pksav-viewer/static/js/453.655008a2.chunk.js",
     "index.html": "/pksav-viewer/index.html",
     "main.e6c13ad2.css.map": "/pksav-viewer/static/css/main.e6c13ad2.css.map",
-    "main.82d96cba.js.map": "/pksav-viewer/static/js/main.82d96cba.js.map",
+    "main.2452ee81.js.map": "/pksav-viewer/static/js/main.2452ee81.js.map",
     "453.655008a2.chunk.js.map": "/pksav-viewer/static/js/453.655008a2.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.82d96cba.js"
+    "static/js/main.2452ee81.js"
   ]
 }
