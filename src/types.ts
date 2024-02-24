@@ -57,7 +57,7 @@ export type PksavWasm = {
   error: string | null;
   load_save_file: (_data: number, _filename: string) => number | null;
   get_save_generation: (_data: number) => number | null;
-  get_trainer_name: (_data: number) => number | null;
+  get_trainer_name: (_data: number, _gen: number) => number | null;
   get_trainer_id: (_data: number) => number | null;
   get_party_count: (_data: number) => number;
   get_party_data: (_data: number, _partyIndex: number, _partyStruct: number) => number | null;

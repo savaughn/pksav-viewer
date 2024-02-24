@@ -52,16 +52,36 @@ int load_save_file(void *pkmn_save, const char file_path[100], uint8_t generatio
 }
 
 EMSCRIPTEN_KEEPALIVE
-char *get_trainer_name(struct pksav_gen1_save *pkmn_save)
+char *get_trainer_name(void *pkmn_save, uint8_t generation)
 {
     static char trainer_name[8] = {"\0"};
-    enum pksav_error error = pksav_gen1_import_text(pkmn_save->trainer_info.p_name, trainer_name, 7);
-    if (error != PKSAV_ERROR_NONE)
+    switch (generation)
     {
-        printf("Error getting trainer name: %d\n", error);
-        return NULL;
+    case SAVE_GENERATION_1:
+    {
+        enum pksav_error error = pksav_gen1_import_text(((struct pksav_gen1_save *)pkmn_save)->trainer_info.p_name, trainer_name, 7);
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error getting trainer name: %d\n", error);
+            return "MissingNm.";
+        }
+        return trainer_name;
     }
-    return trainer_name;
+
+    case SAVE_GENERATION_2:
+    {
+        enum pksav_error error = pksav_gen2_import_text(((struct pksav_gen2_save *)pkmn_save)->trainer_info.p_name, trainer_name, 7);
+        if (error != PKSAV_ERROR_NONE)
+        {
+            printf("Error getting trainer name: %d\n", error);
+            return "MissingNm.";
+        }
+        return trainer_name;
+    }
+
+    default:
+        return "MissingNm.";
+    }
 }
 
 EMSCRIPTEN_KEEPALIVE

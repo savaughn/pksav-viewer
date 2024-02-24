@@ -20,7 +20,7 @@ const usePksavWasm = (): PksavWasm => {
     createmodule().then((module: Module) => {
       setModule(module);
       set_load_save_file(() => module.cwrap("load_save_file", "number", ["number", "string", "number"]));
-      set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number"]));
+      set_get_trainer_name(() => module.cwrap("get_trainer_name", "number", ["number", "number"]));
       set_get_save_generation(() => module.cwrap("detect_savefile_generation", "number", ["string", "number"]));
       set_get_trainer_id(() => module.cwrap("get_trainer_id", "string", ["number"]));
       set_get_party_count(() => module.cwrap("get_party_count", "number", ["number", "number"]));
