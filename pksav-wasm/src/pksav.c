@@ -85,12 +85,27 @@ char *get_trainer_name(void *pkmn_save, uint8_t generation)
 }
 
 EMSCRIPTEN_KEEPALIVE
-char *get_trainer_id(struct pksav_gen1_save *pkmn_save)
+char *get_trainer_id(void *pkmn_save, uint8_t generation)
 {
-    uint16_t trainer_id = pksav_bigendian16(*pkmn_save->trainer_info.p_id);
-    static char trainer_id_str[6] = {"\0"};
-    sprintf(trainer_id_str, "%05d", trainer_id);
-    return trainer_id_str;
+    switch (generation)
+    {
+    case SAVE_GENERATION_1:
+    {
+        uint16_t trainer_id = pksav_bigendian16(*((struct pksav_gen1_save *)pkmn_save)->trainer_info.p_id);
+        static char trainer_id_str[6] = {"\0"};
+        sprintf(trainer_id_str, "%05d", trainer_id);
+        return trainer_id_str;
+    }
+    case SAVE_GENERATION_2:
+    {
+        uint16_t trainer_id = pksav_bigendian16(*((struct pksav_gen2_save *)pkmn_save)->trainer_info.p_id);
+        static char trainer_id_str[6] = {"\0"};
+        sprintf(trainer_id_str, "%05d", trainer_id);
+        return trainer_id_str;
+    }
+    default:
+        return "99999";
+    }
 }
 
 EMSCRIPTEN_KEEPALIVE

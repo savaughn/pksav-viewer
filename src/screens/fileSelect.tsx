@@ -52,7 +52,7 @@ const FileSelectScreen = ({ cb: loadedCallback }) => {
             // Populate trainer info
             loadedCallback({
                 trainerName: Module.UTF8ToString(get_trainer_name(pkmnSaveStruct, saveGeneration) || 0, 8),
-                trainerId: get_trainer_id(pkmnSaveStruct),
+                trainerId: get_trainer_id(pkmnSaveStruct, saveGeneration),
                 partyCount,
                 party: pkmnPartyData
             });
