@@ -23,7 +23,9 @@ export interface PkmnPartyData {
   atk: number;        // 0x3
   def: number;        // 0x5
   spd: number;        // 0x7
-  spcl: number;       // 0x9
+  spcl?: number;       // 0x9
+  spatk?: number;      
+  spdef?: number;
 }  // 0xB
 
 export type PkmnStats = {
@@ -31,6 +33,7 @@ export type PkmnStats = {
   dexId: number;
   pc_data: PkmnPcData;
   party_data: PkmnPartyData;
+  generation: number;
 };
 
 export interface GameData {

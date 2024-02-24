@@ -42,7 +42,7 @@ const Header = ({ nickname, level }) => {
     );
 }
 
-const StatsHeader = ({ dexId }) => {
+const StatsHeader = ({ dexId, showSplitSpcl }) => {
     return (
         <div style={styles.statsHeaderColumn}>
             <img 
@@ -55,12 +55,17 @@ const StatsHeader = ({ dexId }) => {
             <p>Attack:</p>
             <p>Defense:</p>
             <p>Speed:</p>
-            <p>Special:</p>
+            {showSplitSpcl ? 
+                <>
+                    <p>Sp. Attack:</p>
+                    <p>Sp. Defense:</p>
+                </>
+             : <p>Special:</p>}
         </div>
     );
 }
 
-const StatsData = ({ maxHp, atk, def, spd, spcl }) => {
+const StatsData = ({ maxHp, atk, def, spd, spcl = 0, spatk, spdef, showSplitSpcl }) => {
     return (
         <div style={styles.statsData}>
             <h3>Stat</h3>
@@ -68,7 +73,14 @@ const StatsData = ({ maxHp, atk, def, spd, spcl }) => {
             <p>{`${atk}`}</p>
             <p>{`${def}`}</p>
             <p>{`${spd}`}</p>
-            <p>{`${spcl}`}</p>
+            {
+                showSplitSpcl ? 
+                    <>
+                        <p>{`${spatk}`}</p>
+                        <p>{`${spdef}`}</p>
+                    </>
+                : <p>{`${spcl}`}</p>
+            }
         </div>
     );
 }
@@ -87,12 +99,13 @@ const DVData = ({ ivData: [atk, def, spd, spcl, hp] }) => {
 }
 
 const PkmnStats = ({ pkmn }) => {
+    const showSplitSpcl = Boolean(pkmn.generation > 1);
     return (
         <div style={styles.container}>
             <Header nickname={pkmn.nickname} level={pkmn.party_data.level} />
             <div style={styles.header}>
-                <StatsHeader dexId={pkmn.dexId} />
-                <StatsData {...pkmn.party_data} />
+                <StatsHeader dexId={pkmn.dexId} showSplitSpcl={showSplitSpcl} />
+                <StatsData {...pkmn.party_data} showSplitSpcl={showSplitSpcl} />
                 <DVData ivData={pkmn.pc_data.ivData} />
             </div>
         </div>

@@ -47,7 +47,7 @@ int load_save_file(void *pkmn_save, const char file_path[100], uint8_t generatio
         return error;
     }
     default:
-        break;
+        return 0;
     }
 }
 
@@ -114,61 +114,91 @@ int get_party_count(void *pkmn_save, uint8_t generation)
     switch (generation)
     {
     case 1:
-        puts("gen1");
         return ((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->count;
-        break;
     case 2:
-        puts("gen2");
         return ((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->count;
-        break;
     default:
-        break;
+        return 0;
     }
 }
 
 EMSCRIPTEN_KEEPALIVE
-int get_party_data_at_index(struct pksav_gen1_save *pkmn_save, uint8_t index, struct pksav_gen1_party_pokemon *pkmn_party)
+int get_party_data_at_index(void *pkmn_save, uint8_t index, void *pkmn_party, uint8_t generation)
 {
-    uint8_t party_count = pkmn_save->pokemon_storage.p_party->count;
-    if (index >= party_count)
+    switch (generation)
     {
-        printf("Index out of range\n");
-        return 1;
+    case SAVE_GENERATION_1:
+    {
+        uint8_t party_count = ((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->count;
+        if (index >= party_count)
+        {
+            printf("Index out of range\n");
+            return 1;
+        }
+
+        struct pksav_gen1_save *pkmn_save_gen1 = (struct pksav_gen1_save *)pkmn_save;
+        struct pksav_gen1_party_pokemon *pkmn_party_gen1 = (struct pksav_gen1_party_pokemon *)pkmn_party;
+        pkmn_party_gen1->pc_data.species = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.species;
+        pkmn_party_gen1->pc_data.current_hp = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.current_hp);
+        pkmn_party_gen1->pc_data.condition = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.condition;
+        pkmn_party_gen1->pc_data.types[0] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.types[0];
+        pkmn_party_gen1->pc_data.types[1] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.types[1];
+        pkmn_party_gen1->pc_data.catch_rate = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.catch_rate;
+        pkmn_party_gen1->pc_data.moves[0] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.moves[0];
+        pkmn_party_gen1->pc_data.moves[1] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.moves[1];
+        pkmn_party_gen1->pc_data.moves[2] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.moves[2];
+        pkmn_party_gen1->pc_data.moves[3] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.moves[3];
+        pkmn_party_gen1->pc_data.ot_id = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ot_id);
+
+        // size_t *experience = 0;
+        // pksav_import_base256(pkmn_save->pokemon_storage.p_party->party[index].pc_data.exp, 3, experience);
+        pkmn_party_gen1->pc_data.ev_hp = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ev_hp);
+        pkmn_party_gen1->pc_data.ev_atk = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ev_atk);
+        pkmn_party_gen1->pc_data.ev_def = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ev_def);
+        pkmn_party_gen1->pc_data.ev_spd = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ev_spd);
+        pkmn_party_gen1->pc_data.ev_spcl = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.ev_spcl);
+
+        // TODO: might need pp move masking
+        pkmn_party_gen1->pc_data.move_pps[0] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.move_pps[0];
+        pkmn_party_gen1->pc_data.move_pps[1] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.move_pps[1];
+        pkmn_party_gen1->pc_data.move_pps[2] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.move_pps[2];
+        pkmn_party_gen1->pc_data.move_pps[3] = pkmn_save_gen1->pokemon_storage.p_party->party[index].pc_data.move_pps[3];
+
+        pkmn_party_gen1->party_data.level = pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.level;
+        pkmn_party_gen1->party_data.atk = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.atk);
+        pkmn_party_gen1->party_data.def = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.def);
+        pkmn_party_gen1->party_data.spd = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.spd);
+        pkmn_party_gen1->party_data.spcl = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.spcl);
+        pkmn_party_gen1->party_data.max_hp = pksav_bigendian16(pkmn_save_gen1->pokemon_storage.p_party->party[index].party_data.max_hp);
+
+        return 0;
     }
-    pkmn_party->pc_data.species = pkmn_save->pokemon_storage.p_party->party[index].pc_data.species;
-    pkmn_party->pc_data.current_hp = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.current_hp);
-    pkmn_party->pc_data.condition = pkmn_save->pokemon_storage.p_party->party[index].pc_data.condition;
-    pkmn_party->pc_data.types[0] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.types[0];
-    pkmn_party->pc_data.types[1] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.types[1];
-    pkmn_party->pc_data.catch_rate = pkmn_save->pokemon_storage.p_party->party[index].pc_data.catch_rate;
-    pkmn_party->pc_data.moves[0] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.moves[0];
-    pkmn_party->pc_data.moves[1] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.moves[1];
-    pkmn_party->pc_data.moves[2] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.moves[2];
-    pkmn_party->pc_data.moves[3] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.moves[3];
-    pkmn_party->pc_data.ot_id = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ot_id);
+    case SAVE_GENERATION_2:
+    {
+        uint8_t party_count = ((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->count;
+        if (index >= party_count)
+        {
+            printf("Index out of range\n");
+            return 1;
+        }
 
-    // size_t *experience = 0;
-    // pksav_import_base256(pkmn_save->pokemon_storage.p_party->party[index].pc_data.exp, 3, experience);
-    pkmn_party->pc_data.ev_hp = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_hp);
-    pkmn_party->pc_data.ev_atk = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_atk);
-    pkmn_party->pc_data.ev_def = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_def);
-    pkmn_party->pc_data.ev_spd = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_spd);
-    pkmn_party->pc_data.ev_spcl = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].pc_data.ev_spcl);
+        struct pksav_gen2_save *pkmn_save_gen2 = (struct pksav_gen2_save *)pkmn_save;
+        struct pksav_gen2_party_pokemon *pkmn_party_gen2 = (struct pksav_gen2_party_pokemon *)pkmn_party;
+        pkmn_party_gen2->pc_data.species = pkmn_save_gen2->pokemon_storage.p_party->party[index].pc_data.species;
+        pkmn_party_gen2->pc_data.level = pkmn_save_gen2->pokemon_storage.p_party->party[index].pc_data.level;
 
-    // TODO: might need pp move masking
-    pkmn_party->pc_data.move_pps[0] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[0];
-    pkmn_party->pc_data.move_pps[1] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[1];
-    pkmn_party->pc_data.move_pps[2] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[2];
-    pkmn_party->pc_data.move_pps[3] = pkmn_save->pokemon_storage.p_party->party[index].pc_data.move_pps[3];
+        pkmn_party_gen2->party_data.atk = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.atk);
+        pkmn_party_gen2->party_data.def = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.def);
+        pkmn_party_gen2->party_data.spd = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.spd);
+        pkmn_party_gen2->party_data.spatk = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.spatk);
+        pkmn_party_gen2->party_data.spdef = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.spdef);
+        pkmn_party_gen2->party_data.max_hp = pksav_bigendian16(pkmn_save_gen2->pokemon_storage.p_party->party[index].party_data.max_hp);
 
-    pkmn_party->party_data.level = pkmn_save->pokemon_storage.p_party->party[index].party_data.level;
-    pkmn_party->party_data.atk = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.atk);
-    pkmn_party->party_data.def = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.def);
-    pkmn_party->party_data.spd = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.spd);
-    pkmn_party->party_data.spcl = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.spcl);
-    pkmn_party->party_data.max_hp = pksav_bigendian16(pkmn_save->pokemon_storage.p_party->party[index].party_data.max_hp);
-
-    return 0;
+        return 0;
+    }
+    default:
+        return 0;
+    }
 }
 
 struct generic_dv
