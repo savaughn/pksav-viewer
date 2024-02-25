@@ -72,7 +72,7 @@ const getPartyData = (Module, get_party_count, get_party_data, pkmnSaveStruct: n
         get_party_data(pkmnSaveStruct, i, partyStruct, saveGeneration);
 
         const dvDataStruct = Module._malloc(0x5);
-        get_pkmn_dvs(pkmnSaveStruct, i, dvDataStruct);
+        get_pkmn_dvs(pkmnSaveStruct, i, dvDataStruct, saveGeneration);
 
 
         let stats: PkmnStats = {};

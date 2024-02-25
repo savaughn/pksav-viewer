@@ -214,10 +214,19 @@ EMSCRIPTEN_KEEPALIVE
 int get_pkmn_dvs(void *pkmn_save, uint8_t index, struct generic_dv *pkmn_dvs, uint8_t generation)
 {
     uint8_t dvs[PKSAV_NUM_GB_IVS];
-    uint16_t iv_data = 
-        generation == SAVE_GENERATION_1 ? 
-        ((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->party[index].pc_data.iv_data : 
-        ((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->party[index].pc_data.iv_data;
+    uint16_t iv_data = 0;
+    switch (generation)
+    {
+    case SAVE_GENERATION_1:
+        iv_data = ((struct pksav_gen1_save *)pkmn_save)->pokemon_storage.p_party->party[index].pc_data.iv_data;
+        break;
+    case SAVE_GENERATION_2:
+        iv_data = ((struct pksav_gen2_save *)pkmn_save)->pokemon_storage.p_party->party[index].pc_data.iv_data;
+        break;
+    default:
+        iv_data = 0;
+        break;
+    }
     pksav_get_gb_IVs(&iv_data, dvs, sizeof(dvs));
     pkmn_dvs->atk = dvs[PKSAV_GB_IV_ATTACK];
     pkmn_dvs->def = dvs[PKSAV_GB_IV_DEFENSE];
